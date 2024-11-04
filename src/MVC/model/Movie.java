@@ -2,13 +2,11 @@ package MVC.model;
 
 import java.util.List;
 
-class Movie {
+public class Movie {
     private String title;
     private String genre;
     private List<Show> shows;
 
-    public Movie() {
-    }
 
     public Movie(String title, String genre, List<Show> shows) {
         this.title = title;
@@ -58,3 +56,4 @@ class Movie {
                 '}';
     }
 }
+
