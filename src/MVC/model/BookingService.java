@@ -2,7 +2,6 @@ package MVC.model;
 
 import java.util.List;
 import java.util.Optional;
-
 public class BookingService {
     private List<Movie> movies;
 
@@ -26,3 +25,5 @@ public class BookingService {
         return false;
     }
 }
+
+

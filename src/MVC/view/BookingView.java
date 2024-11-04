@@ -14,7 +14,6 @@ public class BookingView {
         );
     }
 
-
     public void displaySeatAvailability(List<Seat> seats) {
         System.out.println("Список мест:");
         seats.forEach(seat ->
@@ -24,14 +23,14 @@ public class BookingView {
 
     public void displayTicketInfo(TicketAdd ticket) {
         System.out.println("Информация о билете: " + ticket.getDescription());
-        System.out.println("Стоимость: $" + ticket.getCost());
     }
 
-    public void displayBookingResult(boolean isBooked) {
-        if (isBooked) {
-            System.out.println("Место успешно забронировано!");
+    public void displayBookingResult(boolean success) {
+        if (success) {
+            System.out.println("Бронирование успешно!");
         } else {
-            System.out.println("Ошибка! Место уже забронировано.");
+            System.out.println("Это место уже занято.");
         }
     }
 }
+

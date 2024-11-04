@@ -1,12 +1,12 @@
 package MVC.model;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Movie {
     private String title;
     private String genre;
     private List<Show> shows;
-
 
     public Movie(String title, String genre, List<Show> shows) {
         this.title = title;
@@ -16,6 +16,10 @@ public class Movie {
 
     public String getTitle() {
         return title;
+    }
+
+    public List<Show> getShows() {
+        return shows;
     }
 
     public void setTitle(String title) {
@@ -28,10 +32,6 @@ public class Movie {
 
     public void setGenre(String genre) {
         this.genre = genre;
-    }
-
-    public List<Show> getShows() {
-        return shows;
     }
 
     public void setShows(List<Show> shows) {
@@ -47,6 +47,12 @@ public class Movie {
         this.shows.remove(show);
     }
 
+    public List<Seat> getAvailableSeats(Show show) {
+        return show.getSeats().stream()
+                .filter(Seat::isAvailable)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
@@ -56,4 +62,5 @@ public class Movie {
                 '}';
     }
 }
+
 

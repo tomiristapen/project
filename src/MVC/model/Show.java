@@ -13,6 +13,16 @@ public class Show {
         this.movie = movie;
         this.showTime = showTime;
         this.seats = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 1; j <= 10; j++) {
+                seats.add(new Seat(i + 1, j));
+            }
+        }
+    }
+
+    public List<Seat> getSeats() {
+        return seats;
     }
 
     public Movie getMovie() {
@@ -23,34 +33,6 @@ public class Show {
         return showTime;
     }
 
-    public List<Seat> getSeats() {
-        return seats;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public void setShowTime(LocalDateTime showTime) {
-        this.showTime = showTime;
-    }
-
-    public void setSeats(List<Seat> seats) {
-        this.seats = seats;
-    }
-
-    public void addSeat(Seat seat) {
-        this.seats.add(seat);
-    }
-
-    public void removeSeat(Seat seat) {
-        this.seats.remove(seat);
-    }
-
-    public long getAvailableSeatsCount() {
-        return seats.stream().filter(Seat::isAvailable).count();
-    }
-
     @Override
     public String toString() {
         return "Show{" +
@@ -59,5 +41,5 @@ public class Show {
                 ", seats: " + seats +
                 '}';
     }
-
 }
+
