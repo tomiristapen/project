@@ -1,3 +1,4 @@
+// Updated BookingController.java
 package MVC.controller;
 
 import Decorator.BasicTicket;
@@ -7,22 +8,21 @@ import Decorator.TicketAdd;
 import FactoryMethod.Ticket;
 import FactoryMethod.TicketFactory;
 import MVC.model.BookingService;
-import MVC.model.Movie;
 import MVC.model.Seat;
 import MVC.model.Show;
 import MVC.view.BookingView;
-
-
-
-// Для бронирования мест в кинотеатре
+import Observer.SeatObserver;
+import Strategy.PricingStrategy;
 
 public class BookingController {
     private BookingView view;
     private BookingService bookingService;
+    private PricingStrategy pricingStrategy;
 
-    public BookingController(BookingView view, BookingService bookingService) {
+    public BookingController(BookingView view, BookingService bookingService, PricingStrategy pricingStrategy) {
         this.view = view;
         this.bookingService = bookingService;
+        this.pricingStrategy = pricingStrategy;
     }
 
     public void showMovies() {
@@ -46,14 +46,21 @@ public class BookingController {
                 ticketAddon = new Drink(ticketAddon);
             }
 
+            double basePrice = 10.0;
+            double discountedPrice = pricingStrategy.applyDiscount(basePrice);
+
             view.displayTicketInfo(ticketAddon);
-            view.displayBookingResult(true);
+            view.displayBookingResult(true, discountedPrice);
         } else {
-            view.displayBookingResult(false);
+            view.displayBookingResult(false, 0.0);
         }
     }
+
+    public void setPricingStrategy(PricingStrategy strategy) {
+        this.pricingStrategy = strategy;
+    }
+
+    public void addSeatObserver(Seat seat, SeatObserver observer) {
+        seat.addObserver(observer);
+    }
 }
-
-
-
-

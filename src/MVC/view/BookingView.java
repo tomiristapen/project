@@ -25,12 +25,12 @@ public class BookingView {
         System.out.println("Информация о билете: " + ticket.getDescription());
     }
 
-    public void displayBookingResult(boolean success) {
+    // Updated method to display final price after discount
+    public void displayBookingResult(boolean success, double finalPrice) {
         if (success) {
-            System.out.println("Бронирование успешно!");
+            System.out.println("Бронирование успешно! Итоговая цена: " + finalPrice);
         } else {
             System.out.println("Это место уже занято.");
         }
     }
 }
-

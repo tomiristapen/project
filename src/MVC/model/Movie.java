@@ -1,5 +1,6 @@
 package MVC.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +12,8 @@ public class Movie {
     public Movie(String title, String genre, List<Show> shows) {
         this.title = title;
         this.genre = genre;
-        this.shows = shows;
+        // Создаем изменяемый список shows
+        this.shows = new ArrayList<>(shows); // Используем ArrayList для изменяемости
     }
 
     public String getTitle() {
@@ -35,12 +37,11 @@ public class Movie {
     }
 
     public void setShows(List<Show> shows) {
-        this.shows = shows;
+        this.shows = new ArrayList<>(shows);
     }
 
-
     public void addShow(Show show) {
-        this.shows.add(show);
+        this.shows.add(show); // Теперь это будет работать
     }
 
     public void removeShow(Show show) {
@@ -62,5 +63,3 @@ public class Movie {
                 '}';
     }
 }
-
-
