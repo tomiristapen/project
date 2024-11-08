@@ -33,4 +33,8 @@ public class BookingView {
             System.out.println("Это место уже занято.");
         }
     }
+
+    public void displayPaymentResult(String message) {
+        System.out.println(message);
+    }
 }

@@ -59,7 +59,16 @@ public class BookingController {
             view.displayBookingResult(false, 0.0);
         }
     }
-    
+
+    private void processPayment(String paymentType, double amount) {
+        boolean isPaymentSuccessful = paymentFacade.processPayment(paymentType, amount);
+        if (isPaymentSuccessful) {
+            view.displayPaymentResult("Оплата успешна. Тип: " + paymentType + ", сумма: " + amount + " тенге");
+        } else {
+            view.displayPaymentResult("Оплата не выполнена. Пожалуйста, попробуйте снова.");
+        }
+    }
+
 
     public void setPricingStrategy(PricingStrategy strategy) {
         this.pricingStrategy = strategy;
