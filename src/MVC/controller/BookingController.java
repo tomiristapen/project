@@ -1,14 +1,19 @@
 package MVC.controller;
 
-import MVC.model.*;
-import MVC.view.BookingView;
-import Facade.PaymentFacade;
 import Decorator.*;
+import Facade.PaymentFacade;
 import FactoryMethod.Ticket;
 import FactoryMethod.TicketFactory;
-import Singleton.NotificationManager;
+import MVC.model.BookingService;
+import MVC.model.Seat;
+import MVC.model.Show;
+import MVC.view.BookingView;
 import Observer.SeatObserver;
+import Strategy.MorningShowDiscountStrategy;
 import Strategy.PricingStrategy;
+import Strategy.RegularPricingStrategy;
+
+import java.time.LocalTime;
 
 public class BookingController {
     private BookingView view;
@@ -44,21 +49,27 @@ public class BookingController {
                 ticketAddon = new Drink(ticketAddon);
             }
 
-            double basePrice = 10.0;
-            double discountedPrice = pricingStrategy.applyDiscount(basePrice);
+            double basePrice = ticket.getPrice();
+            double totalPrice = basePrice + ticketAddon.getCost();
+
+            // Check if the show is in the morning (before 12:00 PM)
+            if (show.getShowTime().toLocalTime().isBefore(LocalTime.NOON)) {
+                pricingStrategy = new MorningShowDiscountStrategy(); // Apply morning show discount
+            } else {
+                pricingStrategy = new RegularPricingStrategy(); // Regular pricing if not morning
+            }
+
+            // Apply the selected pricing strategy
+            double discountedPrice = pricingStrategy.applyDiscount(totalPrice);
 
             view.displayTicketInfo(ticketAddon);
             view.displayBookingResult(true, discountedPrice);
-
-            NotificationManager.getInstance().sendNotification(
-                    "Место успешно забронировано: Ряд " + seat.getRow() + ", Номер " + seat.getNumber()
-            );
         } else {
             view.displayBookingResult(false, 0.0);
         }
     }
 
-    public void processPayment(String paymentType, double amount) {
+    private void processPayment(String paymentType, double amount) {
         boolean isPaymentSuccessful = paymentFacade.processPayment(paymentType, amount);
         if (isPaymentSuccessful) {
             view.displayPaymentResult("Оплата успешна. Тип: " + paymentType + ", сумма: " + amount + " тенге");

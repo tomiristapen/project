@@ -1,7 +1,7 @@
+// Updated Seat.java
 package MVC.model;
 
 import Observer.SeatObserver;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +9,13 @@ public class Seat {
     private int row;
     private int number;
     private boolean isAvailable;
-    private List<SeatObserver> observers = new ArrayList<>(); // Список наблюдателей
+    private List<SeatObserver> observers;
 
-    public Seat(int row, int number, boolean isAvailable) {
+    public Seat(int row, int number) {
         this.row = row;
         this.number = number;
-        this.isAvailable = isAvailable;
+        this.isAvailable = true;
+        this.observers = new ArrayList<>();
     }
 
     public int getRow() {
@@ -30,16 +31,24 @@ public class Seat {
     }
 
     public void setAvailable(boolean available) {
-        this.isAvailable = available;
-        notifyObservers(); // Уведомляем наблюдателей о изменении
+        if (this.isAvailable != available) {
+            this.isAvailable = available;
+            notifyObservers();
+        }
     }
 
-    // Метод для добавления наблюдателя
+    public void toggleAvailability() {
+        setAvailable(!this.isAvailable);
+    }
+
     public void addObserver(SeatObserver observer) {
         observers.add(observer);
     }
 
-    // Метод для уведомления всех наблюдателей
+    public void removeObserver(SeatObserver observer) {
+        observers.remove(observer);
+    }
+
     private void notifyObservers() {
         for (SeatObserver observer : observers) {
             observer.update(this);
@@ -49,9 +58,9 @@ public class Seat {
     @Override
     public String toString() {
         return "Seat{" +
-                "row=" + row +
-                ", number=" + number +
-                ", isAvailable=" + isAvailable +
+                "row: " + row +
+                ", number: " + number +
+                ", isAvailable: " + isAvailable +
                 '}';
     }
 }
