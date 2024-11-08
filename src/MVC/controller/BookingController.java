@@ -5,6 +5,7 @@ import Decorator.BasicTicket;
 import Decorator.Drink;
 import Decorator.Popcorn;
 import Decorator.TicketAdd;
+import Facade.PaymentFacade;
 import FactoryMethod.Ticket;
 import FactoryMethod.TicketFactory;
 import MVC.model.BookingService;
@@ -19,10 +20,13 @@ public class BookingController {
     private BookingService bookingService;
     private PricingStrategy pricingStrategy;
 
-    public BookingController(BookingView view, BookingService bookingService, PricingStrategy pricingStrategy) {
+    private PaymentFacade paymentFacade;
+
+    public BookingController(BookingView view, BookingService bookingService, PricingStrategy pricingStrategy,PaymentFacade paymentFacade) {
         this.view = view;
         this.bookingService = bookingService;
         this.pricingStrategy = pricingStrategy;
+        this.paymentFacade = paymentFacade;
     }
 
     public void showMovies() {
@@ -55,6 +59,7 @@ public class BookingController {
             view.displayBookingResult(false, 0.0);
         }
     }
+    
 
     public void setPricingStrategy(PricingStrategy strategy) {
         this.pricingStrategy = strategy;
