@@ -1,17 +1,12 @@
-// Updated BookingController.java
 package MVC.controller;
 
-import Decorator.BasicTicket;
-import Decorator.Drink;
-import Decorator.Popcorn;
-import Decorator.TicketAdd;
+import MVC.model.*;
+import MVC.view.BookingView;
 import Facade.PaymentFacade;
+import Decorator.*;
 import FactoryMethod.Ticket;
 import FactoryMethod.TicketFactory;
-import MVC.model.BookingService;
-import MVC.model.Seat;
-import MVC.model.Show;
-import MVC.view.BookingView;
+import Singleton.NotificationManager;
 import Observer.SeatObserver;
 import Strategy.PricingStrategy;
 
@@ -19,10 +14,9 @@ public class BookingController {
     private BookingView view;
     private BookingService bookingService;
     private PricingStrategy pricingStrategy;
-
     private PaymentFacade paymentFacade;
 
-    public BookingController(BookingView view, BookingService bookingService, PricingStrategy pricingStrategy,PaymentFacade paymentFacade) {
+    public BookingController(BookingView view, BookingService bookingService, PricingStrategy pricingStrategy, PaymentFacade paymentFacade) {
         this.view = view;
         this.bookingService = bookingService;
         this.pricingStrategy = pricingStrategy;
@@ -55,12 +49,16 @@ public class BookingController {
 
             view.displayTicketInfo(ticketAddon);
             view.displayBookingResult(true, discountedPrice);
+
+            NotificationManager.getInstance().sendNotification(
+                    "Место успешно забронировано: Ряд " + seat.getRow() + ", Номер " + seat.getNumber()
+            );
         } else {
             view.displayBookingResult(false, 0.0);
         }
     }
 
-    private void processPayment(String paymentType, double amount) {
+    public void processPayment(String paymentType, double amount) {
         boolean isPaymentSuccessful = paymentFacade.processPayment(paymentType, amount);
         if (isPaymentSuccessful) {
             view.displayPaymentResult("Оплата успешна. Тип: " + paymentType + ", сумма: " + amount + " тенге");
@@ -68,7 +66,6 @@ public class BookingController {
             view.displayPaymentResult("Оплата не выполнена. Пожалуйста, попробуйте снова.");
         }
     }
-
 
     public void setPricingStrategy(PricingStrategy strategy) {
         this.pricingStrategy = strategy;
