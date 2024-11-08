@@ -1,6 +1,6 @@
 package Decorator;
 
-import FactoryMethod.Ticket;
+
 
 public interface TicketAdd  {
 

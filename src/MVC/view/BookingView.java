@@ -25,7 +25,7 @@ public class BookingView {
         System.out.println("Информация о билете: " + ticket.getDescription());
     }
 
-    // Updated method to display final price after discount
+
     public void displayBookingResult(boolean success, double finalPrice) {
         if (success) {
             System.out.println("Бронирование успешно! Итоговая цена: " + finalPrice);

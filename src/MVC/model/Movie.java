@@ -12,8 +12,7 @@ public class Movie {
     public Movie(String title, String genre, List<Show> shows) {
         this.title = title;
         this.genre = genre;
-        // Создаем изменяемый список shows
-        this.shows = new ArrayList<>(shows); // Используем ArrayList для изменяемости
+        this.shows = new ArrayList<>(shows);
     }
 
     public String getTitle() {
