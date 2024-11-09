@@ -1,7 +1,7 @@
 package Strategy;
 
 public class MorningShowDiscountStrategy implements PricingStrategy {
-    private static final double MORNING_SHOW_DISCOUNT = 0.15; // 15% скидка
+    private static final double MORNING_SHOW_DISCOUNT = 0.15;
 
     @Override
     public double applyDiscount(double price) {

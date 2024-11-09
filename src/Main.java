@@ -1,3 +1,4 @@
+import Singleton.NotificationManager;
 import MVC.controller.BookingController;
 import MVC.model.BookingService;
 import MVC.model.Movie;
@@ -5,7 +6,6 @@ import MVC.model.Seat;
 import MVC.model.Show;
 import MVC.view.BookingView;
 import Strategy.PricingStrategy;
-import Strategy.MorningShowDiscountStrategy;
 import Strategy.RegularPricingStrategy;
 import Facade.PaymentFacade;
 
@@ -17,38 +17,33 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Создаем показы для каждого фильма
         List<Show> movie1Shows = new ArrayList<>();
         Movie movie1 = new Movie("Шрек", "Комедия", movie1Shows);
 
         List<Show> movie2Shows = new ArrayList<>();
         Movie movie2 = new Movie("Гарри Поттер", "Фэнтези", movie2Shows);
 
-        // Утренний и вечерний сеанс для Шрека
-        Show show1 = new Show(movie1, LocalDateTime.of(2024, 11, 10, 10, 0)); // Утренний сеанс
-        Show show1Evening = new Show(movie1, LocalDateTime.of(2024, 11, 10, 18, 0)); // Вечерний сеанс
+        Show show1 = new Show(movie1, LocalDateTime.of(2024, 11, 10, 10, 0));
+        Show show1Evening = new Show(movie1, LocalDateTime.of(2024, 11, 10, 18, 0));
+        Show show2 = new Show(movie2, LocalDateTime.of(2024, 11, 10, 12, 0));
+        Show show2Evening = new Show(movie2, LocalDateTime.of(2024, 11, 10, 20, 0));
 
-        // Утренний и вечерний сеанс для Гарри Поттера
-        Show show2 = new Show(movie2, LocalDateTime.of(2024, 11, 10, 12, 0)); // Утренний сеанс
-        Show show2Evening = new Show(movie2, LocalDateTime.of(2024, 11, 10, 20, 0)); // Вечерний сеанс
-
-        // Добавляем показы в фильмы
         movie1.addShow(show1);
         movie1.addShow(show1Evening);
         movie2.addShow(show2);
         movie2.addShow(show2Evening);
 
-        // Список фильмов
         List<Movie> movies = new ArrayList<>();
         movies.add(movie1);
         movies.add(movie2);
 
-        // Создаем представление, сервис бронирования, стратегию ценообразования и фасад оплаты
         BookingView view = new BookingView();
         BookingService bookingService = new BookingService(movies);
         PricingStrategy pricingStrategy = new RegularPricingStrategy();
         PaymentFacade paymentFacade = new PaymentFacade();
         BookingController controller = new BookingController(view, bookingService, pricingStrategy, paymentFacade);
+
+        NotificationManager notificationManager = NotificationManager.getInstance();
 
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
@@ -74,15 +69,14 @@ public class Main {
                     Movie selectedMovie = movies.get(movieChoice - 1);
                     System.out.println("Доступные показы для " + selectedMovie.getTitle() + ":");
 
-                    // Отображаем все показы для выбранного фильма
                     for (int i = 0; i < selectedMovie.getShows().size(); i++) {
                         Show show = selectedMovie.getShows().get(i);
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                         System.out.println((i + 1) + ". Время сеанса: " + show.getShowTime().format(formatter));
 
-                        // Проверяем, есть ли скидка для утреннего сеанса
                         if (show.getShowTime().getHour() < 12) {
                             System.out.println("Скидка на утренний сеанс!");
+                            notificationManager.sendNotification("Скидка на утренний сеанс доступна!");
                         }
                     }
 
@@ -103,7 +97,6 @@ public class Main {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                         System.out.println((i + 1) + ". Время сеанса: " + show.getShowTime().format(formatter));
 
-                        // Показываем, если есть скидка на утренний сеанс
                         if (show.getShowTime().getHour() < 12) {
                             System.out.println("Скидка на утренний сеанс!");
                         }
@@ -136,15 +129,13 @@ public class Main {
                         System.out.println("Введите тип билета (VIP(2500), Взрослый(1900), Студенческий(1600), Детский(1400)):");
                         String ticketType = scanner.nextLine().trim();
 
-                        // Capture ticket information and price once
                         controller.bookSeat(bookShow, selectedSeat, ticketType, withPopcorn, withDrink);
 
-                        // Prompt for payment type
                         System.out.println("Выберите тип оплаты: 1 - Карта, 2 - Наличные");
                         String paymentType = scanner.nextLine().trim();
 
-                        // Display success message only once
                         System.out.println("Оплата успешна. Тип: " + paymentType + "\n");
+                        notificationManager.sendNotification("Бронирование завершено успешно для фильма " + bookMovie.getTitle() + " на сеанс " + bookShow.getShowTime().format(DateTimeFormatter.ofPattern("HH:mm")));
                     } else {
                         System.out.println("Это место недоступно.");
                     }

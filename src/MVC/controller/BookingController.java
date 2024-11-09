@@ -52,14 +52,12 @@ public class BookingController {
             double basePrice = ticket.getPrice();
             double totalPrice = basePrice + ticketAddon.getCost();
 
-            // Check if the show is in the morning (before 12:00 PM)
             if (show.getShowTime().toLocalTime().isBefore(LocalTime.NOON)) {
                 pricingStrategy = new MorningShowDiscountStrategy(); // Apply morning show discount
             } else {
                 pricingStrategy = new RegularPricingStrategy(); // Regular pricing if not morning
             }
 
-            // Apply the selected pricing strategy
             double discountedPrice = pricingStrategy.applyDiscount(totalPrice);
 
             view.displayTicketInfo(ticketAddon);
